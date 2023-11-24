@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List with Checkboxes</title>
+    <style>
+        /* Add some basic styling */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #todo-list {
+            width: 300px;
+            margin: 0 auto;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+        label {
+            cursor: pointer;
+        }
+        button {
+            background-color: #FF5733;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <H1>to do list app</H1>
+    <div id="todo-list">
+        <h2>To-Do List</h2>
+        <input type="text" id="task" placeholder="Enter a task">
+        <button onclick="addTask()">Add</button>
+        <ul id="task-list">
+            <!-- Tasks will be added here dynamically -->
+        </ul>
+    </div>
+
+    <script>
+        function addTask() {
+            var taskInput = document.getElementById("task");
+            var taskText = taskInput.value.trim();
+
+            if (taskText === "") {
+                alert("Please enter a task.");
+                return;
+            }
+
+            var taskList = document.getElementById("task-list");
+            var li = document.createElement("li");
+            li.innerHTML = `
+                
+            
+                <label>
+                    <input type="checkbox" onclick="toggleTaskCompletion(this)"> ${taskText}
+                </label>
+                <button onclick="removeTask(this)">Remove</button>
+                <button onclick="EditTask(this)">Edit</button>
+            `;
+            taskList.appendChild(li);
+
+            
+            taskInput.value = "";
+        }
+
+        function removeTask(button) {
+            var taskList = document.getElementById("task-list");
+            var li = button.parentElement;
+            taskList.removeChild(li);
+        }
+
+        function toggleTaskCompletion(checkbox) {
+            var li = checkbox.parentElement.parentElement;
+            li.classList.toggle("completed");
+        }
+        function EditTask(button){
+            var li = button.parentElement;
+            var label = li.querySelector('label');
+            var checkbox = label.querySelector('input[type="checkbox"]');
+            var taskText = label.textContent.trim();
+            
+            var newTaskText = prompt("Edit task:", taskText);
+            
+            if (newTaskText === null || newTaskText.trim() === "") {
+                alert("Task cannot be empty.");
+                return;
+            }
+
+            label.innerHTML = `
+                <input type="checkbox" onclick="toggleTaskCompletion(this)"> ${newTaskText}
+            `;
+        }
+        
+    </script>
+</body>
+</html>
+

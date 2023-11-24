@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #weather-display {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather App</h1>
+    <label for="location">Enter Location:</label>
+    <input type="text" id="location" placeholder="e.g., New York">
+    <button id="get-weather">Get Weather</button>
+
+    <div id="weather-display">
+        <h2>Weather Information</h2>
+        <p id="location-info"></p>
+        <p id="temperature-info"></p>
+        <p id="conditions-info"></p>
+    </div>
+
+    <script>
+        const apiKey = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API key
+
+        const getWeatherButton = document.getElementById("get-weather");
+        getWeatherButton.addEventListener("click", async function () {
+            const location = document.getElementById("location").value;
+            const weatherDisplay = document.getElementById("weather-display");
+
+            if (location) {
+                try {
+                    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}`);
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        document.getElementById("location-info").textContent = `Location: ${data.name}, ${data.sys.country}`;
+                        document.getElementById("temperature-info").textContent = `Temperature: ${data.main.temp}°C`;
+                        document.getElementById("conditions-info").textContent = `Conditions: ${data.weather[0].description}`;
+                        weatherDisplay.style.display = "block";
+                    } else {
+                        weatherDisplay.style.display = "none";
+                        alert("Location not found. Please enter a valid location.");
+                    }
+                } catch (error) {
+                    console.error(error);
+                    weatherDisplay.style.display = "none";
+                    alert("An error occurred while fetching weather data.");
+                }
+            } else {
+                weatherDisplay.style.display = "none";
+                alert("Please enter a location.");
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .button {
+            color: white;
+            background-color: yellow;
+        }
+        button {
+            color: white;
+            background-color: red;
+        }
+    </style>
+    <title>CRUD</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Pincode</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="user-list">
+            <!-- Existing user rowsjokkln-->
+
+            
+        </tbody>
+    </table>
+    <br>
+   
+    <form id="add-user-form">
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="text" id="age" placeholder="Age" required>
+        <input type="text" id="pincode" placeholder="Pincode" required>
+        <input type="text" id="address" placeholder="Address" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <button type="submit" class="button">Add User</button>
+        <button type="button" class="button" onclick="clearForm()">Clear</button>
+    </form>
+
+    <script>
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+
+        function renderUserList() {
+            const userList = document.getElementById("user-list");
+            userList.innerHTML = "";
+
+            users.forEach((user, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${user.name}</td>
+                    <td>${user.age}</td>
+                    <td>${user.pincode}</td>
+                    <td>${user.address}</td>
+                    <td>${user.email}</td>
+                    <td>
+                        <button class="button" onclick="editUser(${index})">Edit</button>
+                        <button class="button" onclick="deleteUser(${index})">Delete</button>
+                    </td>
+                `;
+                userList.appendChild(row);
+            });
+        }
+
+        document.getElementById("add-user-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const name = document.getElementById("name").value;
+            const age = document.getElementById("age").value;
+            const pincode = document.getElementById("pincode").value;
+            const address = document.getElementById("address").value;
+            const email = document.getElementById("email").value;
+
+            const newUser = {
+                name,
+                age,
+                pincode,
+                address,
+                email,
+            };
+
+            users.push(newUser);
+            localStorage.setItem("users", JSON.stringify(users));
+
+            renderUserList();
+            clearForm();
+        });
+
+        function editUser(index) {
+            const user = users[index];
+            document.getElementById("name").value = user.name;
+            document.getElementById("age").value = user.age;
+            document.getElementById("pincode").value = user.pincode;
+            document.getElementById("address").value = user.address;
+            document.getElementById("email").value = user.email;
+
+           
+        }
+
+        function deleteUser(index) {
+            users.splice(index, 1);
+            localStorage.setItem("users", JSON.stringify(users));
+            renderUserList();
+        }
+
+        function clearForm() {
+            document.getElementById("add-user-form").reset();
+        }
+
+        
+        renderUserList();
+    </script>
+</body>
+</html>
